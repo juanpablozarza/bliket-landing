@@ -47,9 +47,15 @@ export default function Home() {
     console.log(`DATABASE CREATED`);
     const userUid = userUID()
     console.log(`User id:${userUid}`)
-    if (email1) await set(ref(db, 'users/' + userUid), { email: email1 });
-    if (email2) await set(ref(db, 'users/' + userUid), { email: email2 })
-    alert('Nos pondremos en contacto contigo pronto')
+    try {
+      if (email1) await set(ref(db, 'users/' + userUid), { email: email1 });
+      if (email2) await set(ref(db, 'users/' + userUid), { email: email2 });
+      alert('Nos pondremos en contacto contigo pronto');
+    } catch(error){
+      console.log(error.toString());
+      alert('Sucedio un error. Intenta más tarde!')
+    }
+    
   }
   return (
     <div className=''>
