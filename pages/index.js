@@ -12,7 +12,7 @@ import band from '../public/band.png';
 import match from '../public/match.png';
 import Footer from '../components/Footer';
 import { initializeApp } from "firebase/app";
-import { getDatabase, set, ref } from "firebase/database";
+import { getFirestore, collection, addDoc } from "firebase/firestore";
 
 
 
@@ -43,19 +43,21 @@ export default function Home() {
     console.log(`EMAIL: ${email1}`)
     const email2 = document.getElementById('email-2').value;
     console.log(`EMAIL: ${email2}`)
-    const db = getDatabase(firebaseApp);
+    const db = getFirestore(firebaseApp);
+    const users = collection(db, 'users');
+
     console.log(`DATABASE CREATED`);
     const userUid = userUID()
     console.log(`User id:${userUid}`)
     try {
-      if (email1) await set(ref(db, 'users/' + userUid), { email: email1 });
-      if (email2) await set(ref(db, 'users/' + userUid), { email: email2 });
+      if (email1) addDoc(users, { email: email1 });
+      if (email2) addDoc(users, { email: email2 });
       alert('Nos pondremos en contacto contigo pronto');
-    } catch(error){
+    } catch (error) {
       console.log(error.toString());
       alert('Sucedio un error. Intenta más tarde!')
     }
-    
+
   }
   return (
     <div className=''>
@@ -84,7 +86,7 @@ export default function Home() {
               <Image src={blicket} objectFit='contain' />
             </div>
           </div>
-          <h2 className='text-lg text-primary-100 font-extralight mt-2 lg:text-primary-100'>Te ayudamos a digitalizar tu evento</h2>
+          <h2 className='invisible lg:text-primary-100 text-lg font-extralight mt-2'>Te ayudamos a digitalizar tu evento</h2>
           <form onSubmit={(e) => { writeUserData(e) }} className='grid grid-cols-9 mt-4 gap-2'>
             <input className='col-span-5 rounded-full px-3 py-1 h-10 lg:col-span-7' type='text' placeholder='Dejanos tu email...' id='email-1'></input>
             <button className=' col-span-4 rounded-full bg-primary-500 px-2 py-0.5 text-xl text-white font-semibold lg:col-span-2' type="submit">Contactar</button>
